@@ -12,23 +12,25 @@ type SomeStruct struct {
 }
 
 func HealthCheck(c echo.Context) (err error) {
-	addrs, err := thresh.Addrs()
-	if err != nil {
-		return c.String(http.StatusInternalServerError, err.Error())
-	}
-	for _, ad := range addrs {
-		p := new(thresh.Ping)
-		p.Addr = ad
-		// pass some structure
-		str := new(SomeStruct)
-		err = p.StartAddr(str)
+	go func() {
+		addrs, err := thresh.Addrs()
 		if err != nil {
 			// log err somewhere
 		}
-		// create a checker function to your structure
-		CheckFields(str, p)
-		p.CheckStatus()
-	}
+		for _, ad := range addrs {
+			p := new(thresh.Ping)
+			p.Addr = ad
+			// pass some structure
+			str := new(SomeStruct)
+			err = p.StartAddr(str)
+			if err != nil {
+				// log err somewhere
+			}
+			// create a checker function to your structure
+			CheckFields(str, p)
+			p.CheckStatus()
+		}
+	}()
 	return c.String(http.StatusOK, "OK")
 }
 
