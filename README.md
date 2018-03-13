@@ -34,9 +34,11 @@ func HealthCheck(c echo.Context) (err error) {
 		if err != nil {
 			// log err somewhere
 		}
-		// create a checker function to your structure
-        CheckFields(str, p)
-        // this will warn your slack channel [TODO]
+		// create a checker function 
+		// to your structure
+		CheckFields(str, p)
+		// [TODO] this will warn 
+		// your slack channel
 		p.CheckStatus()
 	}
 	return c.String(http.StatusOK, "OK")
