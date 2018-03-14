@@ -3,6 +3,9 @@ package thresh
 import (
 	"bytes"
 	"io/ioutil"
+	"net/http"
+	"net/http/httptest"
+	"net/url"
 	"os"
 	"testing"
 
@@ -64,4 +67,61 @@ func (s *S) TestStructFromBodyIsInvalid(c *check.C) {
 	err := structFromBody(body, f)
 	c.Assert(err, check.IsNil)
 	c.Assert(((fake{}) == *f), check.Equals, true)
+}
+
+func (s *S) TestPingAddrStatusOK(c *check.C) {
+	testServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+	}))
+	defer testServer.Close()
+	addr, err := url.Parse(testServer.URL)
+	c.Assert(err, check.IsNil)
+	_, err = pingAddr(*addr)
+	c.Assert(err, check.IsNil)
+}
+
+func (s *S) TestPingAddrStatusNotFound(c *check.C) {
+	testServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusNotFound)
+	}))
+	defer testServer.Close()
+	addr, err := url.Parse(testServer.URL)
+	c.Assert(err, check.IsNil)
+	_, err = pingAddr(*addr)
+	c.Assert(err, check.NotNil)
+}
+
+func (s *S) TestStartAddrStatusOK(c *check.C) {
+	testServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("{\"value\":10}"))
+		w.Header().Set("Content-Type", "application/json")
+	}))
+	defer testServer.Close()
+	addr, err := url.Parse(testServer.URL)
+	c.Assert(err, check.IsNil)
+	p := new(Ping)
+	p.Addr = *addr
+	type fake struct {
+		ID int `json:"id"`
+	}
+	f := new(fake)
+	err = p.StartAddr(f)
+	c.Assert(err, check.IsNil)
+}
+
+func (s *S) TestStartAddrStatusNotFound(c *check.C) {
+	testServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusNotFound)
+	}))
+	defer testServer.Close()
+	addr, err := url.Parse(testServer.URL)
+	c.Assert(err, check.IsNil)
+	p := new(Ping)
+	p.Addr = *addr
+	type fake struct {
+		ID int `json:"id"`
+	}
+	f := new(fake)
+	err = p.StartAddr(f)
+	c.Assert(err, check.NotNil)
 }
