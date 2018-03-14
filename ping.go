@@ -16,8 +16,11 @@ func Addrs() (addrs []url.URL, err error) {
 	addrsStr := strings.Split(envAddrs, ",")
 	for _, a := range addrsStr {
 		ad, errP := url.Parse(a)
-		if err != nil {
+		if errP != nil {
 			return nil, errP
+		}
+		if (url.URL{}) == *ad {
+			continue
 		}
 		addrs = append(addrs, *ad)
 	}
@@ -50,14 +53,14 @@ type Ping struct {
 
 // StartAddr receives a structure and a address and unmarshals a body into it's structure
 func (p *Ping) StartAddr(s interface{}) (err error) {
-	b, errPing := pingAddr(p.Addr)
+	b, err := pingAddr(p.Addr)
 	if err != nil {
-		return errPing
+		return
 	}
 	defer b.Close()
-	errBody := structFromBody(b, &s)
+	err = structFromBody(b, &s)
 	if err != nil {
-		return errBody
+		return
 	}
 	return
 }
