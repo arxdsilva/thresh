@@ -5,8 +5,9 @@
 [![LICENSE](https://img.shields.io/badge/license-MIT-orange.svg)](LICENSE)
 
 # Thresh
+<img src="thresh.jpg" alt="Drawing" style="width: 200px;"/>
 
-This is a lib that allows you to use a healthcheck route as a checker for other routes/APIs. This was made to keep checking the size of a channel that is returned in a route, but it's open enought to serve your own porpuse.
+Library that allows you to use a healthcheck route as a checker for other routes/APIs. This was made to keep checking the size of a channel that is returned in a route, but it's open enought to serve your own porpuse.
 
 # [Example](https://github.com/arxdsilva/thresh/tree/master/example)
 
