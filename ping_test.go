@@ -36,6 +36,13 @@ func (s *S) TestAddrsNil(c *check.C) {
 	c.Assert(len(addrs), check.Equals, 0)
 }
 
+func (s *S) TestAddrsInvalidURL(c *check.C) {
+	os.Setenv("ADDRS", "invalid%%%%")
+	defer os.Unsetenv("ADDRS")
+	_, err := Addrs()
+	c.Assert(err, check.NotNil)
+}
+
 func (s *S) TestStructFromBody(c *check.C) {
 	type fake struct {
 		Value int `json:"value"`
@@ -78,6 +85,12 @@ func (s *S) TestPingAddrStatusOK(c *check.C) {
 	c.Assert(err, check.IsNil)
 	_, err = pingAddr(*addr)
 	c.Assert(err, check.IsNil)
+}
+
+func (s *S) TestPingAddrEmpty(c *check.C) {
+	addr := new(url.URL)
+	_, err := pingAddr(*addr)
+	c.Assert(err, check.NotNil)
 }
 
 func (s *S) TestPingAddrStatusNotFound(c *check.C) {
