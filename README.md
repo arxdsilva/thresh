@@ -5,7 +5,7 @@
 [![LICENSE](https://img.shields.io/badge/license-MIT-orange.svg)](LICENSE)
 
 # Table of contents
-1. [About Thresh](https://github.com/arxdsilva/thresh#thresh)
+1. [About Thresh](https://github.com/arxdsilva/thresh#about-thresh)
 2. [Usage](https://github.com/arxdsilva/thresh#usage)
 3. [Example](https://github.com/arxdsilva/thresh#example)
 4. [License](https://github.com/arxdsilva/thresh#license)
