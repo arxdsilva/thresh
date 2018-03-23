@@ -16,6 +16,14 @@ func Test(t *testing.T) {
 	check.TestingT(t)
 }
 
+type fake struct {
+	Value int `json:"value"`
+}
+
+type fakeInvalid struct {
+	ID int `json:"id"`
+}
+
 type S struct{}
 
 var _ = check.Suite(&S{})
@@ -44,9 +52,6 @@ func (s *S) TestAddrsInvalidURL(c *check.C) {
 }
 
 func (s *S) TestStructFromBody(c *check.C) {
-	type fake struct {
-		Value int `json:"value"`
-	}
 	f := new(fake)
 	body := ioutil.NopCloser(bytes.NewBufferString("{\"value\":10}"))
 	err := structFromBody(body, f)
@@ -55,9 +60,6 @@ func (s *S) TestStructFromBody(c *check.C) {
 }
 
 func (s *S) TestStructFromEmptyBody(c *check.C) {
-	type fake struct {
-		Value int `json:"value"`
-	}
 	f := new(fake)
 	body := ioutil.NopCloser(bytes.NewBufferString("{}"))
 	err := structFromBody(body, f)
@@ -66,14 +68,11 @@ func (s *S) TestStructFromEmptyBody(c *check.C) {
 }
 
 func (s *S) TestStructFromBodyIsInvalid(c *check.C) {
-	type fake struct {
-		ID int `json:"id"`
-	}
-	f := new(fake)
+	f := new(fakeInvalid)
 	body := ioutil.NopCloser(bytes.NewBufferString("{\"value\":10}"))
 	err := structFromBody(body, f)
 	c.Assert(err, check.IsNil)
-	c.Assert(((fake{}) == *f), check.Equals, true)
+	c.Assert(((fakeInvalid{}) == *f), check.Equals, true)
 }
 
 func (s *S) TestPingAddrStatusOK(c *check.C) {
@@ -114,10 +113,7 @@ func (s *S) TestStartAddrStatusOK(c *check.C) {
 	c.Assert(err, check.IsNil)
 	p := new(Ping)
 	p.Addr = *addr
-	type fake struct {
-		ID int `json:"id"`
-	}
-	f := new(fake)
+	f := new(fakeInvalid)
 	err = p.StartAddr(f)
 	c.Assert(err, check.IsNil)
 }
@@ -131,10 +127,7 @@ func (s *S) TestStartAddrStatusNotFound(c *check.C) {
 	c.Assert(err, check.IsNil)
 	p := new(Ping)
 	p.Addr = *addr
-	type fake struct {
-		ID int `json:"id"`
-	}
-	f := new(fake)
+	f := new(fakeInvalid)
 	err = p.StartAddr(f)
 	c.Assert(err, check.NotNil)
 }
