@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/arxdsilva/thresh/example/handlers"
+	"github.com/arxdsilva/thresh/_example/handlers"
 
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"

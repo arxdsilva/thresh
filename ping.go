@@ -47,9 +47,14 @@ func structFromBody(body io.ReadCloser, st interface{}) (err error) {
 }
 
 type Ping struct {
-	Addr   url.URL
-	Status bool
+	Addr         url.URL
+	Status       bool
+	NotifierFunc NotifierFunc
 }
+
+// NotifierFunc can be used to control notifications for failed status checks.
+// Provided for static type checking.
+type NotifierFunc func(addr string) error
 
 // StartAddr receives a structure and a address and unmarshals a body into it's structure
 func (p *Ping) StartAddr(s interface{}) (err error) {
@@ -65,8 +70,13 @@ func (p *Ping) StartAddr(s interface{}) (err error) {
 	return
 }
 
-func (p *Ping) CheckStatus() {
-	if !p.Status {
-		// send slack msg
+// CheckStatus should be called to initiating a status check on the provided address.
+// If the optional NotifierFunc is set this will be executed. If no NotfierFunc is set
+// the returned error will always be nil.
+func (p *Ping) CheckStatus() error {
+	if !p.Status && p.NotifierFunc != nil {
+		return p.NotifierFunc(p.Addr.String())
 	}
+
+	return nil
 }
