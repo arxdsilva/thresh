@@ -2,6 +2,18 @@
 
 
 [[projects]]
+  name = "github.com/gorilla/websocket"
+  packages = ["."]
+  revision = "66b9c49e59c6c48f0ffce28c2d8b8a5678502c6d"
+  version = "v1.4.0"
+
+[[projects]]
+  name = "github.com/nlopes/slack"
+  packages = ["."]
+  revision = "0db1d5eae1116bf7c8ed96c6749acfbf4daaec3e"
+  version = "v0.3.0"
+
+[[projects]]
   branch = "v1"
   name = "gopkg.in/check.v1"
   packages = ["."]
@@ -10,6 +22,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "6fd39ad6060b19a151f3ed573a3192ec9a015c216805fc4cab44f40a4f76b498"
+  inputs-digest = "c14f90b19f0ccde3372c441f331b5a94ac1b393bb28b6055a9e037848b698103"
   solver-name = "gps-cdcl"
   solver-version = 1

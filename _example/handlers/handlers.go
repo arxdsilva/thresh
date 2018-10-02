@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"net/http"
+	"os"
 
 	"github.com/arxdsilva/thresh"
 	"github.com/labstack/echo"
@@ -20,6 +21,10 @@ func HealthCheck(c echo.Context) (err error) {
 		for _, ad := range addrs {
 			p := new(thresh.Ping)
 			p.Addr = ad
+			// Add a slack notifier function.
+			if tok := os.Getenv("SLACK_TOKEN"); tok != "" {
+				p.NotifierFunc = thresh.SlackNotifier(tok, "random")
+			}
 			// pass some structure
 			str := new(SomeStruct)
 			err = p.StartAddr(str)
